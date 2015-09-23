@@ -2,21 +2,8 @@ from __future__ import unicode_literals
 
 import six
 
-try:
-    from django.apps import apps
-
-    get_model = apps.get_model
-except ImportError:
-    from django.db.models.loading import get_model
-
-try:
-    from django.utils.module_loading import import_string
-except ImportError:
-    from django.utils.module_loading import import_by_path
-
-    import_string = import_string
-
 from django.db import models
+from .compat import get_model, import_string
 
 from .exceptions import (AutocompleteArgNotUnderstood,
                          AutocompleteNotRegistered,
@@ -152,14 +139,14 @@ class AutocompleteRegistry(dict):
                     # if 'app_name.ModelName'
                     app_label = parts[0]
                     model_name = parts[-1]
-                    model = get_model(app_label=app_label, model_name=model_name)
+                    model = get_model(app_label=app_label, model_name=model_name)  # noqa
                     processed_args.append(model)
                 elif len(parts) > 2:
                     # if 'full.path.to.Model'
                     model = import_string(arg)
                     if not issubclass(model, models.Model):
-                        raise NonDjangoModelSubclassException('%s not is subclass of django Model'
-                                                              % model.__name__)  # flake8: noqa
+                        raise NonDjangoModelSubclassException('%s not is subclass of django Model'  # noqa
+                                                              % model.__name__)
                     processed_args.append(model)
                 else:
                     processed_args.append(arg)
@@ -182,7 +169,9 @@ class AutocompleteRegistry(dict):
 
         if model:
             autocomplete = self._register_model_autocomplete(model,
-                                                             autocomplete, derivate_name, **kwargs)
+                                                             autocomplete,
+                                                             derivate_name,
+                                                             **kwargs)
         else:
             name = kwargs.get('name', autocomplete.__name__)
             autocomplete = type(str(name), (autocomplete,), kwargs)
