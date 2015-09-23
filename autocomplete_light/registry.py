@@ -1,10 +1,13 @@
 from __future__ import unicode_literals
 
 import six
-from django.apps import apps
+try:
+    from django.apps import apps
+    get_model = apps.get_model
+except ImportError:
+    from django.db.models.loading import get_model
 from django.db import models
 from django.utils.module_loading import import_string
-
 
 from .exceptions import (AutocompleteArgNotUnderstood,
                          AutocompleteNotRegistered,
@@ -140,8 +143,7 @@ class AutocompleteRegistry(dict):
                     # if 'app_name.ModelName'
                     app_label = parts[0]
                     model_name = parts[-1]
-                    app_config = apps.get_app_config(app_label)
-                    model = app_config.get_model(model_name)
+                    model = get_model(app_label=app_label, model_name=model_name)
                     processed_args.append(model)
                 elif len(parts) > 2:
                     # if 'full.path.to.Model'
