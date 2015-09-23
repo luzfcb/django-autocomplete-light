@@ -1,13 +1,22 @@
 from __future__ import unicode_literals
 
 import six
+
 try:
     from django.apps import apps
+
     get_model = apps.get_model
 except ImportError:
     from django.db.models.loading import get_model
+
+try:
+    from django.utils.module_loading import import_string
+except ImportError:
+    from django.utils.module_loading import import_by_path
+
+    import_string = import_string
+
 from django.db import models
-from django.utils.module_loading import import_string
 
 from .exceptions import (AutocompleteArgNotUnderstood,
                          AutocompleteNotRegistered,
@@ -173,7 +182,7 @@ class AutocompleteRegistry(dict):
 
         if model:
             autocomplete = self._register_model_autocomplete(model,
-                autocomplete, derivate_name, **kwargs)
+                                                             autocomplete, derivate_name, **kwargs)
         else:
             name = kwargs.get('name', autocomplete.__name__)
             autocomplete = type(str(name), (autocomplete,), kwargs)
@@ -290,6 +299,7 @@ def _autodiscover(registry):
             # attempting to import it, otherwise we want it to bubble up.
             if module_has_submodule(mod, 'autocomplete_light_registry'):
                 raise
+
 
 registry = AutocompleteRegistry()
 
