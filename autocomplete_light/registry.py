@@ -148,7 +148,7 @@ class AutocompleteRegistry(dict):
                     model = import_string(arg)
                     if not issubclass(model, models.Model):
                         raise NonDjangoModelSubclassException('%s not is subclass of django Model'
-                                                              % model.__name__)
+                                                              % model.__name__)  # flake8: noqa
                     processed_args.append(model)
                 else:
                     processed_args.append(arg)
