@@ -160,8 +160,8 @@ class RegistryTestCase(TestCase):
 
     def test_register_model_as_string_invalid_full_dot_path_to_non_model(self):
         try:
-            self.registry.register('django.contrib.auth.forms.UserCreationForm')
-            self.fail('Should raise an exception because not is subclass of django Model')
+            self.registry.register('django.invalid_path.UserCreationForm')
+            self.fail('Should raise an exception because is invalid dot path to Model')
         except ImportError:
             pass
 
