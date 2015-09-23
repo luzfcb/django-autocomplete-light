@@ -2,7 +2,7 @@ from .autocomplete.shortcuts import *
 from .contrib.taggit_field import TaggitField, TaggitWidget
 from .exceptions import (AutocompleteArgNotUnderstood,
                          AutocompleteLightException, AutocompleteNotRegistered,
-                         NoGenericAutocompleteRegistered)
+                         NoGenericAutocompleteRegistered, NonDjangoModelSubclassException)
 from .fields import *
 from .forms import *
 from .registry import AutocompleteRegistry, autodiscover, register, registry

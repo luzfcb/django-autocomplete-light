@@ -5,4 +5,5 @@ selenium
 lxml
 cssselect
 pytest
+pytest-sugar
 pytest-django
