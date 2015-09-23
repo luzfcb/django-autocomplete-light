@@ -1,6 +1,6 @@
 try:
+    # Django 1.7 or over use the new application loading system
     from django.apps import apps
-
     get_model = apps.get_model
 except ImportError:
     from django.db.models.loading import get_model
@@ -12,11 +12,12 @@ except ImportError:
     from django.utils import six
     import sys
 
-    # backport of https://github.com/django/django/blob/master/django/utils/module_loading.py#L9-L27 # noqa
+
     def import_string(dotted_path):
         """
         Import a dotted module path and return the attribute/class designated
         by the last name in the path. Raise ImportError if the import failed.
+        Backported from Django 1.8
         """
         try:
             module_path, class_name = dotted_path.rsplit('.', 1)
